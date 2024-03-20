@@ -1,0 +1,94 @@
+from ._anvil_designer import Form1Template
+import anvil.tables.query as q
+import anvil.server
+import anvil.tables as tables
+from anvil.tables import app_tables
+import anvil.media
+from anvil import *
+
+# Hàm sắp xếp dãy số nguyên bằng Insertion Sort
+def insertionSort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+# Hàm sắp xếp dãy số nguyên bằng Selection Sort
+def selectionSort(arr):
+    for i in range(len(arr)):
+        min_idx = i
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+# Hàm sắp xếp dãy số nguyên bằng Bubble Sort
+def bubbleSort(arr):
+    n = len(arr)
+    for i in range(n - 1):
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+# Hàm sắp xếp dãy số nguyên bằng Merge Sort
+def mergeSort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        mergeSort(left_half)
+        mergeSort(right_half)
+
+        i = j = k = 0
+
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+class Form1(Form1Template):
+
+  def __init__(self, **properties):
+    # Set Form properties and Data Bindings.
+    self.init_components(**properties)
+
+    # Hàm chính xử lý sự kiện khi nhấn vào Button
+    def sort_button_click(self, **event_args):
+        input_text = self.input_box.text
+        numbers = list(map(int, input_text.strip().split()))
+
+        # Chọn thuật toán sắp xếp
+        choice = self.dropdown.selected_value
+        if choice == 'Insertion Sort':
+            insertionSort(numbers)
+        elif choice == 'Selection Sort':
+            selectionSort(numbers)
+        elif choice == 'Bubble Sort':
+            bubbleSort(numbers)
+        elif choice == 'Merge Sort':
+            mergeSort(numbers)
+
+        # Hiển thị dãy số nguyên sau khi sắp xếp
+        self.output_panel.clear()
+        for number in numbers:
+
+          anvil.server.connect("<YOUR_ANVIL_APP_KEY>")
+          anvil.server.wait_forever()
